@@ -1,6 +1,6 @@
 import datetime
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query, HTTPException
 from pymongo import MongoClient
 from pydantic import BaseModel
 import datetime
@@ -43,7 +43,8 @@ def get_reservation_by_table(table: int):
 
 @app.post("/reservation")
 def reserve(reservation: Reservation):
-    # TODO: Add a condition.
+    if reservation.table_number not in range(1,13):
+            raise HTTPException(400, {'status': 'bad request', 'error': 'table must be in 1 to 12.'})
     result = collection.insert_one({
         'name': reservation.name,
         'time': reservation.time,
@@ -52,8 +53,8 @@ def reserve(reservation: Reservation):
     return {'status': 'created'}
 
 
-@app.put("/reservation/update/")
-def update_reservation(reservation: Reservation):
+@app.put("/reservation/update/{name}/{table_number}")
+def update_reservation(name: str, table_number: int, reservation: Reservation):
     pass
 
 

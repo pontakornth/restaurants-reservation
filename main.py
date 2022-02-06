@@ -1,11 +1,14 @@
+import datetime
+
 from fastapi import FastAPI
 from pymongo import MongoClient
 from pydantic import BaseModel
+import datetime
 
 
 class Reservation(BaseModel):
     name: str
-    time: int
+    time: datetime.datetime
     table_number: int
 
 
@@ -40,7 +43,13 @@ def get_reservation_by_table(table: int):
 
 @app.post("/reservation")
 def reserve(reservation: Reservation):
-    pass
+    # TODO: Add a condition.
+    result = collection.insert_one({
+        'name': reservation.name,
+        'time': reservation.time,
+        'table_number': reservation.table_number
+    })
+    return {'status': 'created'}
 
 
 @app.put("/reservation/update/")

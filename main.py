@@ -60,4 +60,5 @@ def update_reservation(name: str, table_number: int, reservation: Reservation):
 
 @app.delete("/reservation/delete/{name}/{table_number}")
 def cancel_reservation(name: str, table_number: int):
-    pass
+    query = collection.delete_one({ "name" : name , "table_number" : "table" })
+    return {"result" : "done" ,}

@@ -18,7 +18,6 @@ collection = db["reservation"]
 app = FastAPI()
 
 
-# TODO complete all endpoint.
 @app.get("/reservation/by-name/{name}")
 def get_reservation_by_name(name: str):
     result = collection.find({'name': name}, {'_id': 0})
@@ -30,9 +29,13 @@ def get_reservation_by_name(name: str):
     }
 
 
-@app.get("reservation/by-table/{table}")
+@app.get("/reservation/by-table/{table}")
 def get_reservation_by_table(table: int):
-    pass
+    result = collection.find({'table_number': table}, {'_id': 0})
+    reservation_list = [r for r in result]
+    return {
+        'reservations': reservation_list
+    }
 
 
 @app.post("/reservation")

@@ -43,9 +43,12 @@ def get_reservation_by_table(table: int):
 
 @app.post("/reservation")
 def reserve(reservation: Reservation):
-    if reservation.table_number not in range(1, 13):
+    if reservation.table_number < 1 or reservation.table_number > 12:
         raise HTTPException(400, {'status': 'bad request', 'error': 'table must be in 1 to 12.'})
-    result = collection.insert_one({
+    existing_reservation = collection.find_one({'time': reservation.time, 'table_number': reservation.table_number})
+    if existing_reservation:
+        return HTTPException(409, {'status': 'conflict', 'error': 'Reservation already exists'})
+    collection.insert_one({
         'name': reservation.name,
         'time': reservation.time,
         'table_number': reservation.table_number

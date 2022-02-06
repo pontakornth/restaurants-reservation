@@ -43,8 +43,8 @@ def get_reservation_by_table(table: int):
 
 @app.post("/reservation")
 def reserve(reservation: Reservation):
-    if reservation.table_number not in range(1,13):
-            raise HTTPException(400, {'status': 'bad request', 'error': 'table must be in 1 to 12.'})
+    if reservation.table_number not in range(1, 13):
+        raise HTTPException(400, {'status': 'bad request', 'error': 'table must be in 1 to 12.'})
     result = collection.insert_one({
         'name': reservation.name,
         'time': reservation.time,
